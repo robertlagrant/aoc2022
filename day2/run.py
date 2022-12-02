@@ -1,6 +1,6 @@
 import inputs
 
-SYNONYMS = {
+ALIAS = {
   "X": "ROCK",
   "Y": "PAPER",
   "Z": "SCISSORS",
@@ -9,45 +9,32 @@ SYNONYMS = {
   "C": "SCISSORS",
 }
 
+SCORE = {
+  ("ROCK", "PAPER"): 1,
+  ("PAPER", "SCISSORS"): 2,
+  ("SCISSORS", "ROCK"): 3,
+  ("ROCK", "ROCK"): 4, 
+  ("PAPER", "PAPER"): 5,
+  ("SCISSORS", "SCISSORS"): 6,
+  ("ROCK", "SCISSORS"): 7,
+  ("PAPER", "ROCK"): 8,
+  ("SCISSORS", "PAPER"): 9,
+}
+
 BEATS = {
   "ROCK": "SCISSORS",
   "SCISSORS": "PAPER",
   "PAPER": "ROCK",
 }
 
-LOSES_TO = {v: k for k, v in BEATS.items()}
+def what_should_i_play(them, command):
+  match command:
+    case "X": return BEATS[them]                                    # lose
+    case "Y": return them                                           # draw
+    case "Z": return next(k for k, v in BEATS.items() if v == them) # win
 
-SCORES = {
-  "ROCK": 1,
-  "PAPER": 2,
-  "SCISSORS": 3,
-}
+commands = [(ALIAS[a], b) for a, b in [l.split() for l in inputs.REAL.split("\n")]]
 
-strategy_1_score, strategy_2_score = 0, 0
-
-def score(them, me):
-  print(them, me)
-  # Score based on what we chose
-  _score = SCORES[me]
-
-  # Score based on who won
-  if them == me:
-    _score += 3
-  elif BEATS[me] == them:
-    _score += 6
-
-  return _score
-
-for turn in inputs.REAL.split("\n"):
-  them_raw, me_raw = turn.split()
-  them = SYNONYMS[them_raw]
-  strategy_1_score += score(them, SYNONYMS[me_raw])
-
-  strategy_2_score += score(them, 
-    them if me_raw == "Y" 
-    else BEATS[them] if me_raw == "X" 
-    else LOSES_TO[them])
-
-print(f"Part 1: {strategy_1_score}")
-print(f"Part 2: {strategy_2_score}")
+print(f"Part 1: {sum(SCORE[ALIAS[me], them] for them, me in commands)}")
+print(f"Part 2: {sum(SCORE[what_should_i_play(them, c), them] for them, c in commands)}")
 
