@@ -27,20 +27,14 @@ BEATS = {
   "PAPER": "ROCK",
 }
 
-LOSES_TO = {v: k for k, v in BEATS.items()}
+commands = [(SYNONYMS[a], b) for a, b in [line.split() for line in inputs.REAL.split("\n")]]
 
-strategy_1_score, strategy_2_score = 0, 0
+def what_should_i_play(them, command):
+  return them if command == "Y" \
+    else BEATS[them] if command == "X" \
+    else next(iter(set(BEATS.keys()) - set([them, BEATS[them]])))
 
-for turn in inputs.REAL.split("\n"):
-  them_raw, me_raw = turn.split()
-  them = SYNONYMS[them_raw]
+print(f"Part 1: {sum(SCORE[SYNONYMS[me], them] for them, me in commands)}")
+print(f"Part 2: {sum(SCORE[what_should_i_play(them, me), them] for them, me in commands)}")
 
-  strategy_1_score += SCORE[(SYNONYMS[me_raw], them)]
-  strategy_2_score += SCORE[( 
-    them if me_raw == "Y" 
-    else LOSES_TO[them] if me_raw == "X" 
-    else BEATS[them], them)]
-
-print(f"Part 1: {strategy_1_score}")
-print(f"Part 2: {strategy_2_score}")
 
