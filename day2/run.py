@@ -35,6 +35,6 @@ def what_should_i_play(them, command):
     else next(iter(set(BEATS.keys()) - set([them, BEATS[them]])))
 
 print(f"Part 1: {sum(SCORE[SYNONYMS[me], them] for them, me in commands)}")
-print(f"Part 2: {sum(SCORE[what_should_i_play(them, me), them] for them, me in commands)}")
+print(f"Part 2: {sum(SCORE[what_should_i_play(them, command), them] for them, command in commands)}")
 
 
