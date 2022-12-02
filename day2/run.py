@@ -26,13 +26,14 @@ SCORES = {
 strategy_1_score, strategy_2_score = 0, 0
 
 def score(them, me):
+  print(them, me)
   # Score based on what we chose
   _score = SCORES[me]
 
   # Score based on who won
   if them == me:
     _score += 3
-  elif LOSES_TO[me] == them:
+  elif BEATS[me] == them:
     _score += 6
 
   return _score
@@ -44,8 +45,8 @@ for turn in inputs.REAL.split("\n"):
 
   strategy_2_score += score(them, 
     them if me_raw == "Y" 
-    else LOSES_TO[them] if me_raw == "X" 
-    else BEATS[them])
+    else BEATS[them] if me_raw == "X" 
+    else LOSES_TO[them])
 
 print(f"Part 1: {strategy_1_score}")
 print(f"Part 2: {strategy_2_score}")
