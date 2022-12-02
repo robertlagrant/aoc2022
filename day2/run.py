@@ -9,6 +9,18 @@ SYNONYMS = {
   "C": "SCISSORS",
 }
 
+SCORE = {
+  ("ROCK", "PAPER"): 1,
+  ("PAPER", "SCISSORS"): 2,
+  ("SCISSORS", "ROCK"): 3,
+  ("ROCK", "ROCK"): 4, 
+  ("PAPER", "PAPER"): 5,
+  ("SCISSORS", "SCISSORS"): 6,
+  ("ROCK", "SCISSORS"): 7,
+  ("PAPER", "ROCK"): 8,
+  ("SCISSORS", "PAPER"): 9,
+}
+
 BEATS = {
   "ROCK": "SCISSORS",
   "SCISSORS": "PAPER",
@@ -17,35 +29,17 @@ BEATS = {
 
 LOSES_TO = {v: k for k, v in BEATS.items()}
 
-SCORES = {
-  "ROCK": 1,
-  "PAPER": 2,
-  "SCISSORS": 3,
-}
-
 strategy_1_score, strategy_2_score = 0, 0
-
-def score(them, me):
-  # Score based on what we chose
-  _score = SCORES[me]
-
-  # Score based on who won
-  if them == me:
-    _score += 3
-  elif LOSES_TO[me] == them:
-    _score += 6
-
-  return _score
 
 for turn in inputs.REAL.split("\n"):
   them_raw, me_raw = turn.split()
   them = SYNONYMS[them_raw]
-  strategy_1_score += score(them, SYNONYMS[me_raw])
 
-  strategy_2_score += score(them, 
+  strategy_1_score += SCORE[(SYNONYMS[me_raw], them)]
+  strategy_2_score += SCORE[( 
     them if me_raw == "Y" 
     else LOSES_TO[them] if me_raw == "X" 
-    else BEATS[them])
+    else BEATS[them], them)]
 
 print(f"Part 1: {strategy_1_score}")
 print(f"Part 2: {strategy_2_score}")
