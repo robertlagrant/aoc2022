@@ -1,33 +1,38 @@
+from enum import Enum
+
 import inputs
 
-BEATS = {
-  "ROCK": "SCISSORS",
-  "SCISSORS": "PAPER",
-  "PAPER": "ROCK",
-}
 
+class Guess(Enum):
+  rock = 1
+  paper = 2
+  scissors = 3
 
-def score(me, them):
-  match me:
-    case "ROCK": score = 1
-    case "PAPER": score = 2
-    case "SCISSORS": score = 3
-
-  return score + (3 if me == them else 6 if BEATS[me] == them else 0)
+  @property
+  def beats(self):
+    return list(Guess)[(self.value - 2) % len(Guess)]
+  
+  @property
+  def beaten_by(self):
+    return list(Guess)[(self.value) % len(Guess)]
 
 
 def alias(command):
   match command:
-    case "X" | "A": return "ROCK"
-    case "Y" | "B": return "PAPER"
-    case "Z" | "C": return "SCISSORS"
+    case "X" | "A": return Guess.rock
+    case "Y" | "B": return Guess.paper
+    case "Z" | "C": return Guess.scissors
 
 
 def what_should_i_play(them, command):
   match command:
-    case "X": return BEATS[them]                                    # lose
-    case "Y": return them                                           # draw
-    case "Z": return next(k for k, v in BEATS.items() if v == them) # win
+    case "X": return them.beats      # lose
+    case "Y": return them            # draw
+    case "Z": return them.beaten_by  # win
+
+
+def score(me, them):
+  return me.value + (6 if me.beats == them else 3 if me == them else 0)
 
 
 commands = [(alias(a), b) for a, b in [l.split() for l in inputs.REAL.split("\n")]]
