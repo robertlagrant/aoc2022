@@ -1,6 +1,6 @@
 import inputs
 
-SYNONYMS = {
+ALIAS = {
   "X": "ROCK",
   "Y": "PAPER",
   "Z": "SCISSORS",
@@ -27,14 +27,14 @@ BEATS = {
   "PAPER": "ROCK",
 }
 
-commands = [(SYNONYMS[a], b) for a, b in [line.split() for line in inputs.REAL.split("\n")]]
-
 def what_should_i_play(them, command):
-  return them if command == "Y" \
-    else BEATS[them] if command == "X" \
-    else next(iter(set(BEATS.keys()) - set([them, BEATS[them]])))
+  match command:
+    case "X": return BEATS[them]                                    # lose
+    case "Y": return them                                           # draw
+    case "Z": return next(k for k, v in BEATS.items() if v == them) # win
 
-print(f"Part 1: {sum(SCORE[SYNONYMS[me], them] for them, me in commands)}")
-print(f"Part 2: {sum(SCORE[what_should_i_play(them, command), them] for them, command in commands)}")
+commands = [(ALIAS[a], b) for a, b in [l.split() for l in inputs.REAL.split("\n")]]
 
+print(f"Part 1: {sum(SCORE[ALIAS[me], them] for them, me in commands)}")
+print(f"Part 2: {sum(SCORE[what_should_i_play(them, c), them] for them, c in commands)}")
 
