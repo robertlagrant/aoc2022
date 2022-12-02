@@ -1,9 +1,9 @@
-from enum import Enum
+from enum import IntEnum
 
 import inputs
 
 
-class Guess(Enum):
+class Guess(IntEnum):
   rock = 1
   paper = 2
   scissors = 3
@@ -32,7 +32,7 @@ def what_should_i_play(them, command):
 
 
 def score(me, them):
-  return me.value + (6 if me.beats == them else 3 if me == them else 0)
+  return me + (6 if me.beats == them else 3 if me == them else 0)
 
 
 commands = [(alias(a), b) for a, b in [l.split() for l in inputs.REAL.split("\n")]]
