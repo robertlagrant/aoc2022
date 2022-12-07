@@ -22,18 +22,14 @@ def parse_dirs(command_list):
   root = Dir(name = "/", parent = None)
   current = root
 
-  for line in command_list:
-    if line.startswith("$ ls"):
-      continue 
-    elif line.startswith("$ cd"):
-      new_dir = line.split()[-1]
-      current = root if new_dir == "/" else current.parent if new_dir == ".." else [c for c in current.children if c.name == new_dir][0]
-    else:
-      size_or_dir, filename = line.split()
-      if size_or_dir == "dir":
-        current.children.append(Dir(name = filename, parent = current))
-      else:
-        current.files[filename] = int(size_or_dir)
+  for command in map(lambda s: s.split(), command_list):
+    match command:
+      case ["$", "ls"]: continue
+      case ["$", "cd", "/"]: current = root
+      case ["$", "cd", ".."]: current = current.parent
+      case ["$", "cd", new]: [c for c in current.children if c.name == new][0]
+      case ["dir", filename]: current.children.append(Dir(name = filename, parent = current))
+      case [size, filename]: current.files[filename] = int(size)
 
   return root
 
