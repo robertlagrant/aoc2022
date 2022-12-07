@@ -10,15 +10,15 @@ class Dir:
   files: dict = field(default_factory=dict)
 
   @property
-  def size(self):
+  def size(self) -> int:
     return sum(v for k, v in self.files.items()) + sum(c.size for c in self.children)
 
   @property
-  def descendents(self):
+  def descendents(self) -> list["Dir"]:
     return self.children + [desc for c in self.children for desc in c.descendents]
 
 
-def parse_dirs(command_list):
+def parse_dirs(command_list: list[str]) -> Dir:
   root = Dir(name = "/", parent = None)
   current = root
 
