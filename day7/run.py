@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from inputs import REAL as commands
+from inputs import TEST as commands
 
 @dataclass
 class Dir:
@@ -19,29 +19,23 @@ class Dir:
 
 
 def parse_dirs(command_list):
-  root_dir = Dir(name = "/", parent = None)
-  current_dir = root_dir
+  root = Dir(name = "/", parent = None)
+  current = root
 
   for line in command_list:
     if line.startswith("$ ls"):
       continue 
     elif line.startswith("$ cd"):
       new_dir = line.split()[-1]
-      if new_dir == "..":
-        current_dir = current_dir.parent
-      else:
-        for d in current_dir.children:
-          if d.name == new_dir:
-            current_dir = d
-            break
+      current = root if new_dir == "/" else current.parent if new_dir == ".." else [c for c in current.children if c.name == new_dir][0]
     else:
       size_or_dir, filename = line.split()
       if size_or_dir == "dir":
-        current_dir.children.append(Dir(name = filename, parent = current_dir))
+        current.children.append(Dir(name = filename, parent = current))
       else:
-        current_dir.files[filename] = int(size_or_dir)
+        current.files[filename] = int(size_or_dir)
 
-  return root_dir
+  return root
 
 SPACE_REQUIRED = 70_000_000 - 30_000_000
 
