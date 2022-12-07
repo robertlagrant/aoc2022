@@ -14,8 +14,8 @@ class Dir:
     return sum(v for k, v in self.files.items()) + sum(c.size for c in self.children)
 
   @property
-  def descendents(self) -> list["Dir"]:
-    return self.children + [desc for c in self.children for desc in c.descendents]
+  def descendants(self) -> list["Dir"]:
+    return self.children + [desc for c in self.children for desc in c.descendants]
 
 
 def parse_dirs(command_list: list[str]) -> Dir:
@@ -37,5 +37,5 @@ SPACE_REQUIRED = 70_000_000 - 30_000_000
 
 root = parse_dirs(commands.split("\n"))
 
-print(f"Part 1: {sum(d.size for d in root.descendents if d.size < 100000)}")
-print(f"Part 2: {min(d.size for d in root.descendents if (root.size - SPACE_REQUIRED) <= d.size)}")
+print(f"Part 1: {sum(d.size for d in root.descendants if d.size < 100000)}")
+print(f"Part 2: {min(d.size for d in root.descendants if (root.size - SPACE_REQUIRED) <= d.size)}")
