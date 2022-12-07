@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from inputs import TEST as commands
+from inputs import REAL as commands
 
 @dataclass
 class Dir:
@@ -27,7 +27,7 @@ def parse_dirs(command_list):
       case ["$", "ls"]: continue
       case ["$", "cd", "/"]: current = root
       case ["$", "cd", ".."]: current = current.parent
-      case ["$", "cd", new]: [c for c in current.children if c.name == new][0]
+      case ["$", "cd", new]: current = [c for c in current.children if c.name == new][0]
       case ["dir", filename]: current.children.append(Dir(name = filename, parent = current))
       case [size, filename]: current.files[filename] = int(size)
 
