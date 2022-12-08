@@ -1,10 +1,7 @@
-from itertools import product
-from pprint import pprint
-from inputs import TEST as tree_map
+from inputs import TEST as tree_heights
 
-trees = [list(map(int, t_row)) for t_row in tree_map.split("\n")]
-width = len(trees[0])
-height = len(trees)
+trees = [list(map(int, t_row)) for t_row in tree_heights.split("\n")]
+width = height = len(trees)
 
 taller_trees = {
   (x, y): {
@@ -12,10 +9,10 @@ taller_trees = {
     "r": [trees[y][x] <= trees[y][x1] for x1 in range(x+1, width)],
     "u": [trees[y][x] <= trees[y1][x] for y1 in range(0, y)],
     "d": [trees[y][x] <= trees[y1][x] for y1 in range(y+1, height)]
-  } for x, y in product(range(width), range(height))
+  } for x in range(width) for y in range(height)
 }
 
-print(f"Part 1: {sum(not all(any(taller_trees[(x,y)][d]) for d in 'lrud') for x, y in product(range(width), range(height)))}")
+print(f"Part 1: {sum(not all(any(taller_trees[(x,y)][d]) for d in 'lrud') for x in range(width) for y in range(height))}")
 
 best_scenic_score = None
 for x, y in product(range(width), range(height)):
