@@ -2,10 +2,9 @@ from functools import reduce
 from itertools import permutations, takewhile
 from operator import mul
 
-from inputs import REAL as tree_heights
-
-trees = [list(map(int, t_row)) for t_row in tree_heights.split("\n")]
-side = len(trees)
+with open("input.txt") as f:
+    trees = [list(map(int, line.strip())) for line in f.readlines()]
+    side = len(trees)
 
 low_trees = [
     (
