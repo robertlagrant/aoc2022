@@ -1,22 +1,21 @@
 from itertools import product
-
-from inputs import REAL as tree_map
+from pprint import pprint
+from inputs import TEST as tree_map
 
 trees = [list(map(int, t_row)) for t_row in tree_map.split("\n")]
 width = len(trees[0])
 height = len(trees)
-count = 0
-for x, y in product(range(width), range(height)):
-  x_left = any(1 for x1 in range(0, x) if trees[x][y] <= trees[x1][y])
-  x_right = any(1 for x1 in range(x+1, width) if trees[x][y] <= trees[x1][y])
-  y_up = any(1 for y1 in range(0, y) if trees[x][y] <= trees[x][y1])
-  y_down = any(1 for y1 in range(y+1, height) if trees[x][y] <= trees[x][y1])
 
-  if not (x_left and x_right and y_up and y_down):
-    count += 1 
+taller_trees = {
+  (x, y): {
+    "l": [trees[y][x] <= trees[y][x1] for x1 in range(0, x)],
+    "r": [trees[y][x] <= trees[y][x1] for x1 in range(x+1, width)],
+    "u": [trees[y][x] <= trees[y1][x] for y1 in range(0, y)],
+    "d": [trees[y][x] <= trees[y1][x] for y1 in range(y+1, height)]
+  } for x, y in product(range(width), range(height))
+}
 
-
-print(f"Part 1: {count}")
+print(f"Part 1: {sum(not all(any(taller_trees[(x,y)][d]) for d in 'lrud') for x, y in product(range(width), range(height)))}")
 
 best_scenic_score = None
 for x, y in product(range(width), range(height)):
