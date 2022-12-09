@@ -11,6 +11,7 @@ class Knot:
             parent.child = self
         self.pos = [(0, 0)]
 
+
     def swaaaay(self, x_step=None, y_step=None, parent=None):
         if parent is None:
             self.pos.append((self.pos[-1][0] + x_step, self.pos[-1][1] + y_step))
@@ -29,15 +30,15 @@ class Knot:
 
 
 def simulate_tail_positions(knots, commands):
-    latest = root = Knot(name=knots[0])
+    last = first = Knot(name=knots[0])
     for c in knots[1:]:
-        latest = Knot(name=c, parent=latest)
+        last = Knot(name=c, parent=last)
 
-    for x_step, y_step in (DIRECTIONS[d] for d, m in (s.split() for s in commands.split("\n")) for _ in range(int(m))):
-        root.swaaaay(x_step, y_step)
+    for x_step, y_step in (DIRECTIONS[d] for d, m in (s.split() for s in commands) for _ in range(int(m))):
+        first.swaaaay(x_step, y_step)
 
-    return latest.pos
+    return last.pos
 
 
-print(f"Part 1: {len(set(simulate_tail_positions('HT', commands)))}")
-print(f"Part 1: {len(set(simulate_tail_positions('H123456789', commands)))}")
+print(f"Part 1: {len(set(simulate_tail_positions('HT', commands.splitlines())))}")
+print(f"Part 1: {len(set(simulate_tail_positions('H123456789', commands.splitlines())))}")
