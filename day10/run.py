@@ -1,23 +1,31 @@
-from inputs import TEST as commands
+from inputs import REAL as commands
 
 KEY_CYCLES = (20, 60, 100, 140, 180, 220)
+SCREEN_WIDTH = 40
+SCREEN_HEIGHT = 6
 X = 1
 
-adds = {} 
+cycle = 0
+key_cycles_sum = 0
+pixels = ""
 
-for cycle, command in enumerate(commands.splitlines()):
-  OLD_X = X
+def do_stuff(cycle, pixels, key_cycles_sum):
+    pixels += "#" if cycle % 40 in (X - 1, X, X + 1) else "."
+    cycle += 1
+    if cycle in KEY_CYCLES:
+        key_cycles_sum += cycle * X
+    
+    return cycle, pixels, key_cycles_sum
 
+
+for command in commands.splitlines():
+  cycle, pixels, key_cycles_sum = do_stuff(cycle, pixels, key_cycles_sum)
+  
   match(command.split()):
     case ["addx", num]: 
-      adds[cycle+2] = num
-    case ["noop"]: ...
+      cycle, pixels, key_cycles_sum = do_stuff(cycle, pixels, key_cycles_sum)
+      X += int(num)
 
-  # print(adds)
-  if cycle in adds:
-    X = X + int(adds[cycle])
-    del adds[cycle]
-
-  print(f"Cycle index {cycle} {OLD_X} -> {X} || {adds}")
-  # if cycle + 1 in KEY_CYCLES:
-  #   print(cycle + 1, X)
+print(f"Part 1: {key_cycles_sum}")
+for i in range(0, SCREEN_WIDTH * SCREEN_HEIGHT, SCREEN_WIDTH):
+  print(f"Part 2: {pixels[i:i+40]}")
