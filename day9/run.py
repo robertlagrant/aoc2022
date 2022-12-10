@@ -1,6 +1,6 @@
 from inputs import REAL as commands
 
-DIRECTIONS = {"R": (1, 0), "L": (-1, 0), "U": (0, 1), "D": (0, -1)}
+D = {"R": (1, 0), "L": (-1, 0), "U": (0, 1), "D": (0, -1)}
 
 
 class Knot:
@@ -9,36 +9,32 @@ class Knot:
         self.child = None
         if parent:
             parent.child = self
-        self.pos = [(0, 0)]
+        self.pos_history = [(0, 0)]
 
+    @property
+    def pos(self):
+        return self.pos_history[-1]
+    
+    def step(self, s=(0,0)):
+        self.pos_history.append((self.pos[0] + s[0], self.pos[1] + s[1]))
 
-    def swaaaay(self, x_step=None, y_step=None, parent=None):
-        if parent is None:
-            self.pos.append((self.pos[-1][0] + x_step, self.pos[-1][1] + y_step))
+    def swaay(self, step=None, parent=None):
+        if step:
+            self.step(step)
         else:
-            x_diff = parent.pos[-1][0] - self.pos[-1][0]
-            y_diff = parent.pos[-1][1] - self.pos[-1][1]
-            if abs(x_diff) > 1 or abs(y_diff) > 1:
-                tx_delta = -1 if x_diff < 0 else 1 if x_diff > 0 else 0
-                ty_delta = -1 if y_diff < 0 else 1 if y_diff > 0 else 0
-                self.pos.append((self.pos[-1][0] + tx_delta, self.pos[-1][1] + ty_delta))
-            else:
-                self.pos.append(self.pos[-1])
-
-        if self.child:
-            self.child.swaaaay(parent=self)
+            ds = parent.pos[0] - self.pos[0], parent.pos[1] - self.pos[1]
+            self.step([0 if all(abs(d) <= 1 for d in ds) else -1 if d < 0 else 1 if d > 0 else 0 for d in ds])
+        
+        return [self.pos] + (self.child.swaay(parent=self) if self.child else [])
 
 
 def simulate_tail_positions(knots, commands):
     last = first = Knot(name=knots[0])
-    for c in knots[1:]:
-        last = Knot(name=c, parent=last)
+    for k in knots[1:]:
+        last = Knot(name=k, parent=last)
 
-    for x_step, y_step in (DIRECTIONS[d] for d, m in (s.split() for s in commands) for _ in range(int(m))):
-        first.swaaaay(x_step, y_step)
-
-    return last.pos
+    return [first.swaay(D[d])[-1] for d in [d for d, m in (s.split() for s in commands) for _ in range(int(m))]]
 
 
 print(f"Part 1: {len(set(simulate_tail_positions('HT', commands.splitlines())))}")
-print(f"Part 1: {len(set(simulate_tail_positions('H123456789', commands.splitlines())))}")
+print(f"Part 2: {len(set(simulate_tail_positions('H123456789', commands.splitlines())))}")
