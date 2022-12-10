@@ -6,18 +6,16 @@ SCREEN_HEIGHT = 6
 
 
 def cycle(commands):
-    cycle, x = 0, 1
+    x = 1
     for command in commands.splitlines():
-        yield (cycle, x)
-        cycle += 1
+        yield x
         if command.startswith("addx"):
-            yield (cycle, x)
-            cycle += 1
+            yield x
             x += int(command.split()[1])
 
 
-print(f"Part 1: {sum((cycle + 1) * x for cycle, x in cycle(commands) if cycle + 1 in KEY_CYCLES)}")
+print(f"Part 1: {sum((c + 1) * x for c, x in enumerate(cycle(commands)) if c + 1 in KEY_CYCLES)}")
 
-pixels = "".join(["#" if cycle % 40 in (x - 1, x, x + 1) else "." for cycle, x in cycle(commands)])
+pixels = "".join(["#" if c % 40 in (x - 1, x, x + 1) else "." for c, x in enumerate(cycle(commands))])
 for i in range(0, SCREEN_WIDTH * SCREEN_HEIGHT, SCREEN_WIDTH):
     print(f"Part 2: {pixels[i:i + SCREEN_WIDTH]}")
