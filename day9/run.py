@@ -26,9 +26,9 @@ class Knot:
         return [self.pos] + (self.child.swaay(parent=self) if self.child else [])
 
 
-def simulate_tail_positions(knots, commands):
-    return [knots.swaay(D[d])[-1] for d in [d for d, m in (s.split() for s in commands) for _ in range(int(m))]]
+def simulate(knots, commands):
+    return [knots.swaay(D[d]) for d in [d for d, m in (s.split() for s in commands) for _ in range(int(m))]]
 
 
-print(f"Part 1: {len(set(simulate_tail_positions(Knot('HT'), commands.splitlines())))}")
-print(f"Part 2: {len(set(simulate_tail_positions(Knot('H123456789'), commands.splitlines())))}")
+print(f"Part 1: {len(set(step[-1] for step in simulate(Knot('HT'), commands.splitlines())))}")
+print(f"Part 2: {len(set(step[-1] for step in simulate(Knot('H123456789'), commands.splitlines())))}")
