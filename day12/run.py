@@ -17,7 +17,6 @@ def move_options(_x: int, _y: int, hm: List[List[str]]) -> List[Tuple[int, int]]
         case [0, y]:                              options = [(0, y - 1), (1, y), (0, y + 1)]
         case [x, 0]:                              options = [(x - 1, 0), (x, 1), (x + 1, 0)]
         case [x, y]:                              options = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
-        case _:                                   raise ValueError()
 
     return [(x, y) for x, y in options if ord(hm[_y][_x]) - ord(hm[y][x]) >= -1]  # check heights
 
