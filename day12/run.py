@@ -1,10 +1,9 @@
 from itertools import chain, product
-from typing import Dict, List, Tuple
 
 from inputs import REAL as HM
 
 
-def move_options(_x: int, _y: int, hm: List[List[str]]) -> List[Tuple[int, int]]:
+def move_options(_x, _y, hm):
     max_y, max_x = len(hm) - 1, len(hm[0]) - 1
 
     match (_x, _y):
@@ -21,18 +20,16 @@ def move_options(_x: int, _y: int, hm: List[List[str]]) -> List[Tuple[int, int]]
     return [(x, y) for x, y in options if ord(hm[_y][_x]) - ord(hm[y][x]) >= -1]  # check heights
 
 
-def random_walk(hm: List[List[str]], start: Tuple[int, int]) -> Dict[Tuple[int, int], int]:
+def random_walk(hm, start):
     moves, to_try = {start: 0}, [start]
 
     while to_try:
         current = to_try.pop(0)
         for o in move_options(*current, hm):
-            if o in moves:
-                if moves[current] + 1 < moves[o]:
-                    moves[o] = moves[current] + 1
-            else:
-                moves[o] = moves[current] + 1
+            if o not in moves:
                 to_try.append(o)
+            if o not in moves or moves[current] + 1 < moves[o]:
+                moves[o] = moves[current] + 1
 
     return moves
 
