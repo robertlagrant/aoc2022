@@ -20,5 +20,5 @@ def comp(left, right):
 
 
 pairs = [list(map(eval, pair.split("\n"))) for pair in data.split("\n\n")]
-print("Part 1:", sum(i + 1 for i, (l, r) in enumerate(pairs) if comp(l, r) != 1))
-print("Part 2:", prod([i + 1 for i, p in enumerate(sorted(chain.from_iterable(pairs + [DP]), key=cmp_to_key(comp))) if p in DP]))
+print(f"Part 1: {sum(i + 1 for i, (l, r) in enumerate(pairs) if comp(l, r) != 1)}")
+print(f"Part 2: {prod(i + 1 for i, p in enumerate(sorted(chain.from_iterable(pairs + [DP]), key=cmp_to_key(comp))) if p in DP)}")
