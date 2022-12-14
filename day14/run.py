@@ -17,11 +17,10 @@ def create_rock(data):
     return rock
 
 
-def drop_sand(source, rock, sand, floor=None):
-    max_y = max(c[1] for c in {source} | rock | sand) - 1
+def drop_sand(source, rock, sand, max_y, floor=None):
     x, y = source
 
-    while (floor is None or y + 1 < floor) and (n_s := [s for xd, yd in [(0, 1), (-1, 1), (1, 1)] if (s := (x + xd, y + yd)) not in rock | sand]):
+    while (floor is None or y + 1 < floor) and (n_s := [s for xd, yd in [(0, 1), (-1, 1), (1, 1)] if (s := (x + xd, y + yd)) not in sand | rock]):
         x, y = n_s[0]
 
         if floor is None and y > max_y:
@@ -32,9 +31,10 @@ def drop_sand(source, rock, sand, floor=None):
 
 def pour(source, rock, floor=None):
     sand = set()
-    while source not in sand and (new_sand := drop_sand(source, rock, sand, floor)):
+    max_y = max(c[1] for c in {source} | rock) - 1
+    while source not in sand and (new_sand := drop_sand(source, rock, sand, max_y, floor)):
         sand.add(new_sand)
-    
+
     return sand
 
 
