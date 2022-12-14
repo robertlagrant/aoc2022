@@ -1,6 +1,6 @@
 from itertools import pairwise
 
-from inputs import TEST as data
+from inputs import REAL as data
 
 
 def create_rock(data):
@@ -20,7 +20,7 @@ def create_rock(data):
 def drop_sand(source, rock, sand, max_y, floor=None):
     x, y = source
 
-    while (floor is None or y + 1 < floor) and (n_s := [s for xd, yd in [(0, 1), (-1, 1), (1, 1)] if (s := (x + xd, y + yd)) not in sand | rock]):
+    while (floor is None or y + 1 < floor) and (n_s := [s for xd, yd in [(0, 1), (-1, 1), (1, 1)] if (s := (x + xd, y + yd)) not in rock and s not in sand]):
         x, y = n_s[0]
 
         if floor is None and y > max_y:
