@@ -31,11 +31,11 @@ for path in data.split("\n"):
 
 
 
-def drop_sand(source, rock, sand, use_floor=False):
+def drop_sand(source, rock, sand):
     max_y = max(c[1] for c in {source} | rock | sand) - 1
     current_x, current_y = source
     while True:
-        if not use_floor and current_y > max_y:
+        if current_y > max_y:
             return None
         elif (current_x, current_y + 1) not in rock | sand:
             current_y += 1
@@ -54,7 +54,7 @@ counter = 0
 # pprint({source}, rock, sand)
 while True:
     # print(counter)
-    # pprint(({source}, rock, sand))
+    # pprint({source}, rock, sand)
     # print()
     new_sand = drop_sand(source, rock, sand)
     if new_sand:
@@ -64,3 +64,45 @@ while True:
         break
 
 print(f"Part 1: {counter}")
+
+
+def drop_sand_with_floor(source, rock, sand, floor):
+    # print(floor)
+    current_x, current_y = source
+
+    while True:
+        if source in sand: # source is blocked
+            return None
+        elif (current_x, current_y + 1) not in rock | sand and current_y + 1 < floor:
+            current_y += 1
+        elif (current_x - 1, current_y + 1) not in rock | sand and current_y + 1 < floor:
+            current_x -= 1
+            current_y += 1
+        elif (current_x + 1, current_y + 1) not in rock | sand and current_y + 1 < floor:
+            current_x += 1
+            current_y += 1
+        else:
+            break
+    
+    return current_x, current_y
+
+
+counter = 0
+sand = set()
+pprint({source}, rock, sand)
+floor = max(c[1] for c in {source} | rock | sand) + 2
+while True:
+    # print(counter)
+    # pprint({source}, rock, sand)
+    # print()
+    if counter % 100 == 0:
+        print(counter)
+    new_sand = drop_sand_with_floor(source, rock, sand, floor)
+    if new_sand:
+        sand.add(new_sand)
+        counter += 1
+    else:
+        break
+
+pprint({source}, rock, sand)
+print(f"Part 2: {counter}")
