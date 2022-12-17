@@ -56,8 +56,7 @@ if manhatten_dist((5,2), (-4, 8)) != 15:
     raise ValueError()
 
 
-covered = set()
-beacons = set()
+
 # counter = 0
 # for m in [{k: int(v) for k, v in MATCHER.match(d).groupdict().items()} for d in data.split("\n")]:
 #     print((m["sx"], m["bx"]), (m["sy"], m["by"]))
@@ -75,6 +74,22 @@ beacons = set()
 
 row = 2000000
 covered = set()
+beacons = set()
+for m in [{k: int(v) for k, v in MATCHER.match(d).groupdict().items()} for d in data.split("\n")]:
+    beacon = (m["bx"], m["by"])
+    sensor = (m["sx"], m["sy"])
+
+    if m["by"] == row:
+        beacons.add(beacon)
+    
+    distance = manhatten_dist(sensor, beacon)
+    covered.update(manhatten_area_cuts(sensor, distance, row))
+    
+print(f"Part 1: {len(covered - set(y for _, y in beacons))}")
+
+
+covered = set()
+beacons = set()
 for m in [{k: int(v) for k, v in MATCHER.match(d).groupdict().items()} for d in data.split("\n")]:
     beacon = (m["bx"], m["by"])
     sensor = (m["sx"], m["sy"])
@@ -85,6 +100,3 @@ for m in [{k: int(v) for k, v in MATCHER.match(d).groupdict().items()} for d in 
     distance = manhatten_dist(sensor, beacon)
     covered.update(manhatten_area_cuts(sensor, distance, row))
 
-
-    
-print(f"Part 1: {len(covered - set(y for _, y in beacons))}")
