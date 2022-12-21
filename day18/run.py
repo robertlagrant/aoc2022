@@ -15,33 +15,28 @@ def face_count_in_steam(c, steam):
 
 def fill_with_steam(cubes):
     cubes_list = list(cubes)
-    x_min, y_min, z_min = cubes_list[0]
-    x_max, y_max, z_max = cubes_list[0]
+    xm, ym, zm = cubes_list[0]
+    xx, yx, zx = cubes_list[0]
 
     for c in cubes_list[1:]:
-        x_min, x_max = min(x_min, c[0]), max(x_max, c[0])
-        y_min, y_max = min(y_min, c[1]), max(y_max, c[1])
-        z_min, z_max = min(z_min, c[2]), max(z_max, c[2])
+        xm, xx = min(xm, c[0]), max(xx, c[0])
+        ym, yx = min(ym, c[1]), max(yx, c[1])
+        zm, zx = min(zm, c[2]), max(zx, c[2])
 
     steam = set()
-    cubes_touching_steam = set()
-
-    candidate_steam = [(x_min - 1, y_min - 1, z_min - 1)]
+    candidate_steam = [(xm - 1, ym - 1, zm - 1)]
     while candidate_steam:
         s = candidate_steam.pop()
-        if s not in steam:
-            steam.add(s)
-            for dx, dy, dz in MANHATTAN_3D:
-                m = s[0] + dx, s[1] + dy, s[2] + dz
-                if (x_min - 1) <= m[0] <= (x_max + 1) and (y_min - 1) <= m[1] <= (y_max + 1) and (z_min - 1) <= m[2] <= (z_max + 1):
-                    if m in cubes:
-                        cubes_touching_steam.add(m)
-                    if m not in steam and m not in cubes:
-                        candidate_steam.append(m)
+        steam.add(s)
+        for dx, dy, dz in MANHATTAN_3D:
+            m = s[0] + dx, s[1] + dy, s[2] + dz
+            if (xm - 1) <= m[0] <= (xx + 1) and (ym - 1) <= m[1] <= (yx + 1) and (zm - 1) <= m[2] <= (zx + 1):
+                if m not in steam and m not in cubes:
+                    candidate_steam.append(m)
     
-    return cubes_touching_steam, steam
+    return steam
 
-cubes_touching_steam, steam = fill_with_steam(CUBES)
 
+steam = fill_with_steam(CUBES)
 print(f"Part 1: {sum(face_count(c, CUBES) for c in CUBES)}") 
-print(f"Part 2: {sum(face_count_in_steam(c, steam) for c in cubes_touching_steam)}")
+print(f"Part 2: {sum(face_count_in_steam(c, steam) for c in CUBES)}")
